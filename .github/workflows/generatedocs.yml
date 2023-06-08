@@ -2,8 +2,8 @@ name: generatedocs
 
 on:
   push:
-    paths:
-      - '**/*.mo'
+    branches:
+      - main
 
 jobs:
   build:
