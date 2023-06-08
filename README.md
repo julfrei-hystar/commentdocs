@@ -1,7 +1,7 @@
 # commentdocs
 
 This repo includes:
-- A little python script that:
+- A python script that:
   1. iterates through modelica files in directory and subdirectories,
   2. extracts the comments from these modelica files
   3. writes them into markdown files in branch 'docs'
