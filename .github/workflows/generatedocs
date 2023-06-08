@@ -1,0 +1,53 @@
+name: generatedocs
+
+on:
+  push:
+    paths:
+      - '**/*.mo'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Requirements
+        run: pip install Pygments
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Build docs
+        run: python3 generatedocs.py
+      - name: Store markdown files as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: markdown
+          path: |
+            **/*.md
+          retention-days: 1
+            
+  save:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: docs
+      - name: Remove all markdown files
+        run: |
+          rm -rf *
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: markdown
+      - name: Commit
+        run: |
+          git config --global user.name 'jul (documentation generator)'
+          git config --global user.email 'julian.frei@hystar.com'
+          git add -A
+          git commit -m "Generated Documentation"
+          git push
